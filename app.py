@@ -30,7 +30,8 @@ def main(name):
             "id": dt_string,
             "name": "---",
             "desc": "---",
-            "imgs": "https://github.com/GitanjanD22/MyProducts/blob/main/assets/{0}/{1}.jpg?raw=true".format(name, dt_string),
+            "size": "0",
+            "imgs": "https://github.com/SumitaD73/StockManagement/blob/main/assets/{0}/{1}.jpg?raw=true".format(name, dt_string),
             "cost": "---",
             "stock": "true"
         })
