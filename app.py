@@ -4,6 +4,21 @@ import os
 from pathlib import Path
 from time import sleep
 from datetime import datetime
+import mysql.connector
+
+mydb = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  password="",
+  database="ideal_creations"
+)
+
+
+def trunctab(name):
+    mycursor = mydb.cursor()
+    sql = "DELETE FROM {0}".format(name)
+    mycursor.execute(sql)
+    mydb.commit()
 
 
 def main(name):
@@ -38,7 +53,17 @@ def main(name):
 
         os.rename(op, np)
 
-        print(np)
+        sleep(1)
+
+        mycursor = mydb.cursor()
+
+        sql = "INSERT INTO {0} (id, name, description, size, image, price, stock) VALUES (%s, %s, %s, %s,%s, %s, %s)".format(name)
+        val = ("", "product name", "product description", "0", dt_string, "---", "true")
+        mycursor.execute(sql, val)
+
+        mydb.commit()
+
+        print("[" + str(id) + "] - " + np)
 
         sleep(1)
 
@@ -51,9 +76,12 @@ if __name__ == '__main__':
         name_arr = ['saree', 'blouse', 'ornaments']
 
         for n in name_arr:
-            main(n)
+            trunctab(n)
+            sleep(2)
             print("")
-            sleep(1)
+            main(n)
+            sleep(2)
+            print("")
 
         print("\n\nComplete.")
     except KeyboardInterrupt:
