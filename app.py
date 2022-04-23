@@ -5,6 +5,7 @@ from pathlib import Path
 from time import sleep
 from datetime import datetime
 import mysql.connector
+from PIL import Image
 
 mydb = mysql.connector.connect(
   host="localhost",
@@ -33,6 +34,12 @@ def main(name):
     new_arr = []
 
     for f in file_arr:
+        image = Image.open(f)
+        new_image = image.resize((1000, 1200))
+        new_image.save(f)
+
+        sleep(1)
+
         now = datetime.now()
         dt_string = now.strftime("I%d%mD%Y%HC%M%SR")
 
@@ -63,7 +70,7 @@ def main(name):
 
         mydb.commit()
 
-        print("[" + str(id) + "] - " + np)
+        print("[" + str(id) + "] - " + str(new_image.size) + " - " + np)
 
         sleep(1)
 
@@ -77,11 +84,10 @@ if __name__ == '__main__':
 
         for n in name_arr:
             trunctab(n)
-            sleep(2)
+            sleep(1)
             print("")
             main(n)
-            sleep(2)
-            print("")
+            sleep(1)
 
         print("\n\nComplete.")
     except KeyboardInterrupt:
