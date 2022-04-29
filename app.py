@@ -17,7 +17,7 @@ mydb = mysql.connector.connect(
 
 def trunctab(name):
     mycursor = mydb.cursor()
-    sql = "DELETE FROM {0}".format(name)
+    sql = "TRUNCATE TABLE {0}".format(name)
     mycursor.execute(sql)
     mydb.commit()
 
@@ -38,7 +38,7 @@ def main(name):
         new_image = image.resize((1000, 1200))
         new_image.save(f)
 
-        sleep(1)
+        sleep(0.5)
 
         now = datetime.now()
         dt_string = now.strftime("I%d%mD%Y%HC%M%SR")
@@ -55,24 +55,26 @@ def main(name):
             "size": "0",
             "imgs": "https://github.com/SumitaD73/StockManagement/blob/main/assets/{0}/{1}.jpg?raw=true".format(name, dt_string),
             "cost": "---",
-            "stock": "true"
+            "stock": "true",
+            "hidden": "false",
+            "deleted": "false"
         })
 
         os.rename(op, np)
 
-        sleep(1)
+        sleep(0.5)
 
         mycursor = mydb.cursor()
 
-        sql = "INSERT INTO {0} (id, name, description, size, image, price, stock) VALUES (%s, %s, %s, %s,%s, %s, %s)".format(name)
-        val = ("", "product name", "product description", "0", dt_string, "---", "true")
+        sql = "INSERT INTO {0} (id, name, description, size, image, price, stock, hidden, deleted) VALUES (%s, %s, %s, %s,%s, %s, %s, %s, %s)".format(name)
+        val = ("", "Product Name", "Some Product Description", "0", dt_string, "---", "true", "false", "false")
         mycursor.execute(sql, val)
 
         mydb.commit()
 
         print("[" + str(id) + "] - " + str(new_image.size) + " - " + np)
 
-        sleep(1)
+        sleep(0.5)
 
     file1 = open("./json/{0}.json".format(name), "w")
     file1.write(json.dumps(new_arr, sort_keys=False, indent=4))
@@ -84,10 +86,10 @@ if __name__ == '__main__':
 
         for n in name_arr:
             trunctab(n)
-            sleep(1)
+            sleep(0.5)
             print("")
             main(n)
-            sleep(1)
+            sleep(0.5)
 
         print("\n\nComplete.")
     except KeyboardInterrupt:
